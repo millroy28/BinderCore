@@ -44,26 +44,24 @@
             <div class="menu-bar-item">
                 @if (Model.View.GroupSequence == true)
                 {
-                    <a class="menu-bar-button" onclick="show_sequence_inputs(@Model.View.SavedViewId)" id="updateSequenceButton">Edit Sequence</a>
+                    <a class="menu-bar-action-button" onclick="show_sequence_inputs(@Model.View.SavedViewId)" id="updateSequenceButton">Edit Sequence</a>
                 }
             </div>
             <div class="menu-bar-item">
                 @if (Model.View.GroupSequence == true)
                 {
-                    <a class="menu-bar-button" onclick="selected_action_form_submit('NewText', @Model.View.SetValue)">New Text</a>
+                    <a class="menu-bar-action-button" onclick="selected_action_form_submit('NewText', @Model.View.SetValue)">New Text</a>
                 }
                 else
                 {
-                    <a class="menu-bar-button" onclick="selected_action_form_submit('NewText', -1)">New Text</a>
+                    <a class="menu-bar-action-button" onclick="selected_action_form_submit('NewText', -1)">New Text</a>
                 }
             </div>
 
 
 
             <div class="menu-bar-dropdown">
-                <div class="menu-bar-button-dropdown">
-                    Columns ▼
-                </div>
+                <div class="menu-bar-button-dropdown">View ▼</div>
                 <div class="menu-bar-dropdown-content">
                     <a class="menu-bar-dropdown-item" onclick="hidden_view_form_submit('LastView', 'view_last_modified', this.id, 'last_modified_col')" id="toggle_last_modified">? Last Edited</a>
                     <a class="menu-bar-dropdown-item" onclick="hidden_view_form_submit('LastView', 'view_last_modified_by', this.id, 'last_modified_by_col')" id="toggle_last_modified_by">? Last Edited By</a>
@@ -74,53 +72,30 @@
                     <a class="menu-bar-dropdown-item" onclick="hidden_view_form_submit('LastView', 'view_groups', this.id, 'groups_col')" id="toggle_groups">? Groups</a>
                     <a class="menu-bar-dropdown-item" onclick="hidden_view_form_submit('LastView', 'view_word_count', this.id, 'wordcount_col')" id="toggle_wordcount">? Word Count</a>
                     <a class="menu-bar-dropdown-item" onclick="hidden_view_form_submit('LastView', 'view_char_count', this.id, 'charcount_col')" id="toggle_charcount">? Character Count</a>
-
-
+                    <a class="menu-bar-dropdown-item-noclick">――――――――</a>
+                    <a class="menu-bar-dropdown-item-noclick">(Reset to Default)</a>
+                    <a class="menu-bar-dropdown-item-noclick">――――――――</a>
+                    <a class="menu-bar-dropdown-item" onclick="sub_form('SaveDefault');">Set Current as Default</a>
                 </div>
             </div>
             <div class="menu-bar-dropdown">
-                <div class="menu-bar-button-dropdown">
-                    Views ▼
-                </div>
+                <div class="menu-bar-button-dropdown">Groups ▼</div>
                 <div class="menu-bar-dropdown-content">
                     @foreach (var group in Model.Groups)
                     {
-                        if (group.TextGroupId < 0)
-                        {
-                            <a class="menu-bar-dropdown-item" onclick="selected_action_form_submit('GroupFilter', this.id)" id=@group.SavedViewId>@group.GroupTitle</a>
-                        }
+                       <a class="menu-bar-dropdown-item" onclick="selected_action_form_submit('GroupFilter', this.id)" id=@group.SavedViewId>@group.GroupTitle</a>
                     }
-                    <a class="menu-bar-dropdown-item">――――――――</a>
-                    <a class="menu-bar-dropdown-item" onclick="sub_form('SaveDefault');">Set Default</a>
                 </div>
             </div>
             <div class="menu-bar-dropdown">
-                <div class="menu-bar-button-dropdown">
-                    Groups ▼
-                </div>
+                <div class="menu-bar-button-dropdown">Actions ▼</div>
                 <div class="menu-bar-dropdown-content">
                     <a class="menu-bar-dropdown-item" onclick="selected_action_form_submit('CreateGroup', -1)">New Group</a>
                     @if (Model.Groups.Count > 3)  // 3 views created by default for each binder
                     {
                         <a class="menu-bar-dropdown-item" onclick="selected_action_form_submit('ManageGroups', -1)">Edit Groups</a>
-                        <a class="menu-bar-dropdown-item" onclick="window.listTextsActions.openGroupModal()">Add to / Remove from Groups</a>
+                        <a class="menu-bar-dropdown-item" onclick="window.listTextsActions.openGroupModal()">Add / Remove Groups</a>
                     }
-
-
-
-                </div>
-            </div>
-            <div class="menu-bar-dropdown">
-                <div class="menu-bar-button-dropdown">
-                    Actions ▼
-                </div>
-                <div class="menu-bar-dropdown-content">
-                    @if (Model.Binder.Name != "Trash" && Model.Binder.Name != "Loose Pages" && Model.View.SetValue == "Hidden")
-                    {
-                        <a class="menu-bar-dropdown-item" onclick="selected_action_form_submit('Restore', '-1')">Restore (unhide in binder)</a>
-                        <a class="menu-bar-dropdown-item">――――――――</a>
-                    }
-
                     <a class="menu-bar-dropdown-item" onclick="window.listTextsActions.openBinderModal()">Transfer To Binder</a>
                 </div>
             </div>
@@ -131,15 +106,15 @@
 
                 <a class="menu-bar-button" onclick="clear_search()">Clear</a>
             </div>
-            <div class="menu-bar-item">
+@*             <div class="menu-bar-item">
                 <a href="#" class="menu-bar-button" data-drawer-trigger aria-controls="GroupDrawer" aria-expanded="false">List of Groups</a>
-            </div>
+            </div> *@
 
             @if (Model.View.GroupSequence == true)
             {
                 <div class="menu-bar-escape">
                     <div class="menu-bar-item-right-final">
-                        <a class="menu-bar-button" href="/BinderCore/ListTextsOnSessionStart?binderId=@Model.Binder.BinderId">Return to Binder</a>
+                        <a class="menu-bar-action-button" href="/BinderCore/ListTextsOnSessionStart?binderId=@Model.Binder.BinderId">Return to Binder</a>
                     </div>
                 </div>
             }

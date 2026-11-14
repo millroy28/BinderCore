@@ -588,36 +588,37 @@ namespace RhymeBinder.Models.HelperModels
             DisplayBinder binder = GetDisplayBinder(userId, savedView.BinderId);
             List<DisplayTextGroup> groups = GetDisplayTextGroupsInBinder(userId, binder.BinderId);
 
-            // Add default views to list of groups for display in dropdown.
-            try
-            {
-                groups.Add(new DisplayTextGroup()
-                {
-                    GroupTitle = "All",
-                    SavedViewId = _context.SavedViews.Single(x => x.BinderId == binder.BinderId
-                                                               && x.SetValue == "All").SavedViewId,
-                    TextGroupId = -1
-                });
-                groups.Add(new DisplayTextGroup()
-                {
-                    GroupTitle = "Default",
-                    SavedViewId = _context.SavedViews.Single(x => x.BinderId == binder.BinderId
-                                                               && x.SetValue == "Active").SavedViewId,
-                    TextGroupId = -1
-                });
-                groups.Add(new DisplayTextGroup()
-                {
-                    GroupTitle = "Hidden",
-                    SavedViewId = _context.SavedViews.Single(x => x.BinderId == binder.BinderId
-                                                               && x.SetValue == "Hidden").SavedViewId,
-                    TextGroupId = -1
-                });
-            }
-            catch
-            {
-                displayTextHeadersAndSavedView.View = new SavedView() { SavedViewId = -1 };
-                return displayTextHeadersAndSavedView;
-            }
+            //// TODO - rethink Hidden (we are not using) - The whole All/Default/Hidded in the front end is confusing, to me, and I designed the idea. I never use it. I'm taking it out
+            //// Add default views to list of groups for display in dropdown.
+            //try
+            //{
+            //    groups.Add(new DisplayTextGroup()
+            //    {
+            //        GroupTitle = "All",
+            //        SavedViewId = _context.SavedViews.Single(x => x.BinderId == binder.BinderId
+            //                                                   && x.SetValue == "All").SavedViewId,
+            //        TextGroupId = -1
+            //    });
+            //    groups.Add(new DisplayTextGroup()
+            //    {
+            //        GroupTitle = "Default",
+            //        SavedViewId = _context.SavedViews.Single(x => x.BinderId == binder.BinderId
+            //                                                   && x.SetValue == "Active").SavedViewId,
+            //        TextGroupId = -1
+            //    });
+            //    groups.Add(new DisplayTextGroup()
+            //    {
+            //        GroupTitle = "Hidden",
+            //        SavedViewId = _context.SavedViews.Single(x => x.BinderId == binder.BinderId
+            //                                                   && x.SetValue == "Hidden").SavedViewId,
+            //        TextGroupId = -1
+            //    });
+            //}
+            //catch
+            //{
+            //    displayTextHeadersAndSavedView.View = new SavedView() { SavedViewId = -1 };
+            //    return displayTextHeadersAndSavedView;
+            //}
 
             // let's pause for station identification and an error check
             if (savedView.SavedViewId == -1 || binder.BinderId == -1)
