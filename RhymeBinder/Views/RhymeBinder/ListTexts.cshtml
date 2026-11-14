@@ -78,14 +78,8 @@
                     <a class="menu-bar-dropdown-item" onclick="sub_form('SaveDefault');">Set Current as Default</a>
                 </div>
             </div>
-            <div class="menu-bar-dropdown">
-                <div class="menu-bar-button-dropdown">Groups ▼</div>
-                <div class="menu-bar-dropdown-content">
-                    @foreach (var group in Model.Groups)
-                    {
-                       <a class="menu-bar-dropdown-item" onclick="selected_action_form_submit('GroupFilter', this.id)" id=@group.SavedViewId>@group.GroupTitle</a>
-                    }
-                </div>
+            <div class="menu-bar-item">
+                <a class="menu-bar-button" onclick="window.listTextsActions.openGroupPickerModal()">Groups</a>
             </div>
             <div class="menu-bar-dropdown">
                 <div class="menu-bar-button-dropdown">Actions ▼</div>
@@ -148,7 +142,7 @@
         Model.View.SearchValue,
         Groups = Model.Groups
             .Where(g => g.TextGroupId > 0) // exclude pseudo-groups like "All"/"Hidden"
-            .Select(g => new { g.TextGroupId, g.GroupTitle, g.Locked, MemberTextHeaderIds = g.LinkedTextHeaderIds }),
+            .Select(g => new { g.TextGroupId, g.SavedViewId, g.GroupTitle, g.Locked, MemberTextHeaderIds = g.LinkedTextHeaderIds }),
         UserBinders = Model.UserBinders.Select(b => new { b.BinderId, b.Name })
     };
 }

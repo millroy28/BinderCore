@@ -46,6 +46,7 @@
     import { ref, reactive, computed, onMounted, watch } from 'vue'
     import { formatDate, formatNumber } from '../formatters.js'
     import GroupAssignmentModal from './GroupAssignmentModal.vue'
+    import GroupPickerModal from './GroupPickerModal.vue'
     import BinderTransferModal from './BinderTransferModal.vue'
     import Multiselect from '@vueform/multiselect'
     import '@vueform/multiselect/themes/default.css'
@@ -67,6 +68,7 @@
 
     const selectedIds = computed(() => Object.keys(selected).filter(id => selected[id]).map(Number))
     const showGroupModal = ref(false)
+    const showGroupPickerModal = ref(false)
     const showBinderModal = ref(false)
     const selectedGroupIds = ref([])
 
@@ -184,6 +186,7 @@
     onMounted(() => {
         window.listTextsActions = {
             openGroupModal: () => { showGroupModal.value = true },
+            openGroupPickerModal: () => { showGroupPickerModal.value = true },
             openBinderModal: () => { showBinderModal.value = true }
         }
     })
@@ -257,6 +260,9 @@
                           :selectedTextHeaderIds="selectedIds"
                           @close="showGroupModal = false"
                           @submitted="handleGroupsSubmitted" />
+    <GroupPickerModal v-if="showGroupPickerModal"
+                      :groups="groups"
+                      @close="showGroupPickerModal = false" />
     <BinderTransferModal v-if="showBinderModal"
                          :binders="props.initialData.userBinders"
                          :selectedTextHeaderIds="selectedIds"
