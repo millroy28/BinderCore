@@ -43,7 +43,7 @@ onUnmounted(() => {
 
             <div class="group-picker-content">
                 <a v-for="group in props.groups"
-                   :key="group.textGroupId"
+                   :key="group.savedViewId"
                    class="group-picker-item"
                    href="#"
                    @click.prevent="selectGroup(group.savedViewId)">
