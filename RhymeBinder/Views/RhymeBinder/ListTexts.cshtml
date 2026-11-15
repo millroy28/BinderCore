@@ -33,6 +33,7 @@
 
 
 
+<form action="ListTexts" method="post" id="view">
 <div class="list-texts-shell">
     <div class="list-texts-shell-rail-left"></div>
     <div class="list-texts-shell-main">
@@ -157,7 +158,6 @@
 
 
 
-<form action="ListTexts" method="post" id="view">
     <input type="hidden" name="View.SavedViewId" value="@Model.View.SavedViewId" />
     <input type="hidden" name="View.UserId" value="@Model.View.UserId" />
     <input type="hidden" name="View.GroupSequence" value="@Model.View.GroupSequence.ToString()" id="view_group_sequence" />
