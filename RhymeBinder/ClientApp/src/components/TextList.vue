@@ -199,6 +199,7 @@
                 isPinned: text.isPinned,
                 groupSequence: text.groupSequence
             })
+            text.hasInlineEdits = false
         }
 
         inlineEditMode.value = true
@@ -228,6 +229,19 @@
         form.requestSubmit(submitButton)
     }
 
+    function updateHasInlineEdits(text) {
+        const original = editOriginals.get(text.textHeaderId)
+        if (!original) return
+
+        const sequenceValue = value =>
+            value === '' || value === null || value === undefined ? null : Number(value)
+
+        text.hasInlineEdits =
+            text.title !== original.title ||
+            Boolean(text.isPinned) !== Boolean(original.isPinned) ||
+            (groupSequenceView &&
+                sequenceValue(text.groupSequence) !== sequenceValue(original.groupSequence))
+    }
 
     onMounted(() => {
         window.listTextsActions = {
@@ -288,6 +302,9 @@
             <tr v-for="(text, index) in visibleTexts" :key="text.textHeaderId">
                 <td>
                     <input type="hidden" :name="`TextHeaders[${index}].TextHeaderId`" :value="text.textHeaderId" />
+                    <input type="hidden"
+                           :name="`TextHeaders[${index}].HasInlineEdits`"
+                           :value="text.hasInlineEdits ? 'true' : 'false'" />
                     <input type="checkbox" :name="`TextHeaders[${index}].Selected`" value="true" v-model="selected[text.textHeaderId]" />
                 </td>
                 <td>
@@ -295,7 +312,9 @@
                         <input type="hidden"
                                :name="`TextHeaders[${index}].IsPinned`"
                                :value="text.isPinned ? 'true' : 'false'" />
-                        <input type="checkbox" v-model="text.isPinned" />
+                        <input type="checkbox" 
+                               v-model="text.isPinned"
+                               @change="updateHasInlineEdits(text)" />
                         <label>Pinned</label>
                     </template>
                 </td>
@@ -303,7 +322,8 @@
                     <input v-if="inlineEditMode"
                            type="number"
                            :name="`TextHeaders[${index}].GroupSequence`"
-                           v-model.number="text.groupSequence" />
+                           v-model.number="text.groupSequence"
+                           @change="updateHasInlineEdits(text)" />
                     <template v-else>
                         {{ text.groupSequence }}
                     </template>
@@ -313,7 +333,8 @@
                     <input v-if="inlineEditMode"
                            type="text"
                            :name="`TextHeaders[${index}].Title`"
-                           v-model="text.title" />
+                           v-model="text.title"
+                           @change="updateHasInlineEdits(text)" />
                     <a v-else
                        class="link-item"
                        :href="`/RhymeBinder/ViewText?textHeaderID=${text.textHeaderId}`">
