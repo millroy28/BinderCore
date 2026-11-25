@@ -41,6 +41,7 @@ namespace RhymeBinder.Models.DBModels
         public int TextNoteId { get; set; }
         public int? CharacterCount { get; set; }
         public int? WordCount { get; set; }
+        public bool IsPinned { get; set; } = false;
 
         public virtual Binder Binder { get; set; }
         public virtual SimpleUser CreatedByNavigation { get; set; }

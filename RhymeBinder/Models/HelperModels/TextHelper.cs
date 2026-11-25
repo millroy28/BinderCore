@@ -495,7 +495,8 @@ namespace RhymeBinder.Models.HelperModels
                     RevisionStatus = _context.TextRevisionStatuses.Single(x => x.TextRevisionStatusId == textHeader.TextRevisionStatusId).TextRevisionStatus1,
                     GroupSequence = groupSequence,
                     CharacterCount = textHeader.CharacterCount ?? 0,
-                    WordCount = textHeader.WordCount ?? 0
+                    WordCount = textHeader.WordCount ?? 0,
+                    IsPinned = textHeader.IsPinned
                 });
             }
 

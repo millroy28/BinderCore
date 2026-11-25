@@ -89,6 +89,9 @@
 
     const visibleColumnDefs = computed(() => columnDefs.value.filter(c => c.visible))
 
+    const inlineEditMode = ref(false)
+    const editOriginals = new Map()
+
     function setSort(field) {
         if (sortField.value === field) {
             sortDescending.value = !sortDescending.value
@@ -183,11 +186,55 @@
         showBinderModal.value = false
     }
 
+    function toggleInlineEdit() {
+        if (inlineEditMode.value) {
+            cancelInlineEdit()
+            return
+        }
+
+        editOriginals.clear()
+        for (const text of texts.value) {
+            editOriginals.set(text.textHeaderId, {
+                title: text.title,
+                isPinned: text.isPinned,
+                groupSequence: text.groupSequence
+            })
+        }
+
+        inlineEditMode.value = true
+        document.getElementById('toggleInlineEditButton').textContent = 'Editing…'
+    }
+
+    function cancelInlineEdit() {
+        for (const text of texts.value) {
+            const original = editOriginals.get(text.textHeaderId)
+            if (!original) continue
+
+            text.title = original.title
+            text.isPinned = original.isPinned
+            text.groupSequence = original.groupSequence
+        }
+
+        editOriginals.clear()
+        inlineEditMode.value = false
+        document.getElementById('toggleInlineEditButton').textContent = 'Inline Edit'
+    }
+
+    function saveInlineEdits() {
+        const form = document.getElementById('view')
+        const submitButton = document.getElementById('bttn_sub')
+
+        submitButton.value = 'InlineEditSave'
+        form.requestSubmit(submitButton)
+    }
+
+
     onMounted(() => {
         window.listTextsActions = {
             openGroupModal: () => { showGroupModal.value = true },
             openGroupPickerModal: () => { showGroupPickerModal.value = true },
-            openBinderModal: () => { showBinderModal.value = true }
+            openBinderModal: () => { showBinderModal.value = true },
+            toggleInlineEdit
         }
     })
 </script>
@@ -210,6 +257,10 @@
         <div class="menu-bar-item">
             <button type="button" @click="clearFilters">Clear filters</button>
         </div>
+        <div v-if="inlineEditMode" class="menu-bar-secondary">
+            <button type="button" @click="saveInlineEdits">Submit changes</button>
+            <button type="button" @click="cancelInlineEdit">Cancel</button>
+        </div>
     </div>
 
     <!--Table-->
@@ -223,6 +274,7 @@
                            :checked="allVisibleSelected"
                            @change="toggleSelectAll" />
                 </th>
+                <th>Pinned</th>
                 <th v-if="groupSequenceView" @click="setSort('groupSequence')">Sequence</th>
                 <th v-else></th>
                 <th @click="setSort('title')">Title</th>
@@ -238,9 +290,36 @@
                     <input type="hidden" :name="`TextHeaders[${index}].TextHeaderId`" :value="text.textHeaderId" />
                     <input type="checkbox" :name="`TextHeaders[${index}].Selected`" value="true" v-model="selected[text.textHeaderId]" />
                 </td>
-                <td v-if="groupSequenceView">{{ text.groupSequence }}</td>
+                <td>
+                    <template v-if="inlineEditMode">
+                        <input type="hidden"
+                               :name="`TextHeaders[${index}].IsPinned`"
+                               :value="text.isPinned ? 'true' : 'false'" />
+                        <input type="checkbox" v-model="text.isPinned" />
+                        <label>Pinned</label>
+                    </template>
+                </td>
+                <td v-if="groupSequenceView">
+                    <input v-if="inlineEditMode"
+                           type="number"
+                           :name="`TextHeaders[${index}].GroupSequence`"
+                           v-model.number="text.groupSequence" />
+                    <template v-else>
+                        {{ text.groupSequence }}
+                    </template>
+                </td>
                 <td v-else></td>
-                <td><a class="link-item" :href="`/RhymeBinder/ViewText?textHeaderID=${text.textHeaderId}`">{{ text.title }}</a></td>
+                <td>
+                    <input v-if="inlineEditMode"
+                           type="text"
+                           :name="`TextHeaders[${index}].Title`"
+                           v-model="text.title" />
+                    <a v-else
+                       class="link-item"
+                       :href="`/RhymeBinder/ViewText?textHeaderID=${text.textHeaderId}`">
+                        {{ text.title }}
+                    </a>
+                </td>
                 <td v-for="col in visibleColumnDefs" :key="col.key" :class="`align-${col.align}`">
                     {{ col.format ? col.format(text[col.key]) : text[col.key] }}
                 </td>

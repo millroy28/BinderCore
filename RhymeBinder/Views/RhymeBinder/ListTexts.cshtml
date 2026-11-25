@@ -43,6 +43,11 @@
                 @Model.MenuTitle
             </div>
             <div class="menu-bar-item">
+                <a class="menu-bar-action-button"
+                    id="toggleInlineEditButton"
+                    onclick="window.listTextsActions.toggleInlineEdit()">Edit</a>
+            </div>
+            <div class="menu-bar-item">
                 @if (Model.View.GroupSequence == true)
                 {
                     <a class="menu-bar-action-button" onclick="show_sequence_inputs(@Model.View.SavedViewId)" id="updateSequenceButton">Edit Sequence</a>
