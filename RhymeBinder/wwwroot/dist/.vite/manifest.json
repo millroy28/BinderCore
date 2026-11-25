@@ -8,12 +8,12 @@
     "src": "src/assets/vite.svg"
   },
   "src/main.js": {
-    "file": "assets/main-B7z4qj6d.js",
+    "file": "assets/main-DsK8Rjsl.js",
     "name": "main",
     "src": "src/main.js",
     "isEntry": true,
     "css": [
-      "assets/main-D_HKXtd1.css"
+      "assets/main-CKya-c00.css"
     ]
   }
 }

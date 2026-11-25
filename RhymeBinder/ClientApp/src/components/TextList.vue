@@ -90,6 +90,7 @@
     const visibleColumnDefs = computed(() => columnDefs.value.filter(c => c.visible))
 
     const inlineEditMode = ref(false)
+    const inlineEditOrder = ref([])
     const editOriginals = new Map()
 
     function setSort(field) {
@@ -121,6 +122,13 @@
     })
 
     const visibleTexts = computed(() => {
+        if (inlineEditMode.value) {
+            const textById = new Map(texts.value.map(text => [text.textHeaderId, text]))
+            return inlineEditOrder.value
+                .map(id => textById.get(id))
+                .filter(Boolean)
+        }
+
         const sorted = [...filteredTexts.value]
         sorted.sort((a, b) => {
             const av = a[sortField.value]
@@ -187,6 +195,7 @@
     }
 
     function toggleInlineEdit() {
+        inlineEditOrder.value = visibleTexts.value.map(text => text.textHeaderId)
         if (inlineEditMode.value) {
             cancelInlineEdit()
             return
